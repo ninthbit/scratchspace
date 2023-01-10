@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="Display Webcam Stream" name="title">
+<title>Display Webcam Stream</title>
+<style>
+    body {
+      margin: 0px;
+      width: 1080px;
+      height: 1920px;
+    }
+
+    h1 {
+      font-family: sans-serif;
+      color: #666;
+    }
+
+    #videoElement {
+	  position: absolute;
+	  top: 420px;
+	  right: -420px;
+      width: 1920px;
+      height: 1080px;
+      background-color: #666;
+	  transform: rotate(90deg);
+    }
+    
+    }
+  </style>
+</head>
+
+<body>
+  <video autoplay="true" id="videoElement">
+</video>
+
+<script>
+    var video = document.querySelector("#videoElement");
+    var stopVideo = document.querySelector("#videoElement");
+
+
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({
+                                 Audio: false,
+				 video: { label: "Cam Link Pro HDMI-3" }
+                                 })
+
+        .then(function (stream) {
+          video.srcObject = stream;
+        })
+        .catch(function (err0r) {
+          console.log("Something went wrong!");
+        });
+    }
+
+
+
+// Stop video playback function on click
+    stopVideo.addEventListener("click", stop, false);
+
+function stop(e) {
+
+/*
+(async () => {   
+  await navigator.mediaDevices.getUserMedia({audio: false, video: true});   
+  let devices = await navigator.mediaDevices.enumerateDevices();   
+  console.log(devices); 
+})();
+*/
+
+
+  //  Get list of devices and log to console
+if (!navigator.mediaDevices?.enumerateDevices) {
+  console.log("enumerateDevices() not supported.");
+} else {
+  // List cameras and microphones.
+  navigator.mediaDevices.enumerateDevices({audio: false, video: true})
+    .then((devices) => {
+      devices.forEach((device) => {
+        console.log(`_ ${device.kind} _:_ ${device.label} _:id = :_ ${device.deviceId} _`);
+      });
+    })
+    .catch((err) => {
+      console.error(`${err.name}: ${err.message}`);
+    });
+}
+	  
+}
+
+function gotDevices(mediaDevices){
+  mediaDevices.forEach(mediaDevice => {
+    if (mediaDevice.kind === 'videoinput') {
+      console.log(`_ ${mediaDevice.kind} _:_ ${mediaDevice.label} _:id = :_ ${mediaDevice.deviceId} _`);
+    }
+  });
+  
+}
+
+
+  </script>
+</body>
+</html>
